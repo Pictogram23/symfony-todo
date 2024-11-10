@@ -5,6 +5,8 @@
 @layer base {
     * {
         font-family: Poppins;
+        text-align: center;
+        margin: auto 0;
     }
 
     a {
