@@ -33,10 +33,12 @@ const Home = () => {
         return(
           <Card key={task.id} sx={{width: 275, marginX: 1}}>
             <TaskCard
+              id={task.id}
               name={task.name}
               description={task.description}
               deadline={task.deadline}
               done={task.done}
+              getTasks={getTasks}
               />
           </Card>
         )
