@@ -1,12 +1,16 @@
 import { Box, Button, TextareaAutosize, TextField } from "@mui/material"
 import { useState } from "react"
 
-const TaskForm = () => {
+type TaskFormProps = {
+    getTasks: () => void,
+}
+
+const TaskForm = ({getTasks}: TaskFormProps) => {
     const [name, setName] = useState<string>('')
     const [desc, setDesc] = useState<string>('')
     const [deadline, setDeadline] = useState<string>()
 
-    const POST = () => {
+    const POST = async() => {
         if (name == '') return
         const data = JSON.stringify({
             name: name,
@@ -22,7 +26,8 @@ const TaskForm = () => {
                 "Content-Type": "application/ld+json"
             }
         }
-        fetch('/tasks', options)
+        await fetch('/tasks', options)
+        await getTasks()
     }
 
     return (

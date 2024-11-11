@@ -1,13 +1,13 @@
 import { CardContent, Checkbox, Typography } from "@mui/material"
 
-type TaskCard = {
+type TaskCardProps = {
     name: string,
     description: string,
     deadline?: Date,
     done: boolean,
 }
 
-const TaskCard = ({name, description, deadline, done}: TaskCard) => {
+const TaskCard = ({name, description, deadline, done}: TaskCardProps) => {
     return (
         <CardContent>
             <Typography sx={{color: "text.secondary", fontSize: 14}}>

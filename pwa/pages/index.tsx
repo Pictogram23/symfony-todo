@@ -17,6 +17,7 @@ const Home = () => {
   const getTasks = async() => {
     const res = await fetch("/tasks")
     const data = await res.json()
+    console.log(data.member)
     setTasks(data.member)
   }
 
@@ -30,7 +31,7 @@ const Home = () => {
     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 10}}>
       {tasks.map((task) => {
         return(
-          <Card key={task.id} sx={{width: 275}}>
+          <Card key={task.id} sx={{width: 275, marginX: 1}}>
             <TaskCard
               name={task.name}
               description={task.description}
@@ -42,7 +43,7 @@ const Home = () => {
       })}
     </div>
     <div style={{paddingTop: 10}}>
-      <TaskForm />
+      <TaskForm getTasks={getTasks} />
     </div>
   </>)
 }
