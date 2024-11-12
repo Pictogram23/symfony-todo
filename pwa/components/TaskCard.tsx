@@ -1,4 +1,5 @@
-import { CardContent, Checkbox, Typography } from "@mui/material"
+import { CardContent, Checkbox, IconButton, Typography } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type TaskCardProps = {
     id: number,
@@ -29,6 +30,14 @@ const TaskCard = ({id, name, description, deadline, done, getTasks}: TaskCardPro
         await getTasks()
     }
 
+    const deleteTask = async() => {
+        const options = {
+            method: "DELETE"
+        }
+        await fetch(`/tasks/${id}`, options)
+        await getTasks()
+    }
+
     return (
         <CardContent>
             <Typography sx={{color: "text.secondary", fontSize: 14}}>
@@ -41,6 +50,9 @@ const TaskCard = ({id, name, description, deadline, done, getTasks}: TaskCardPro
                 {description}
             </Typography>
             <Checkbox checked={done} onClick={updateTaskDone} />
+            <IconButton onClick={deleteTask}>
+                <DeleteIcon />
+            </IconButton>
         </CardContent>
     )
 }
