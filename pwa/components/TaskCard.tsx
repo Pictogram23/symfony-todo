@@ -1,22 +1,27 @@
-import { CardContent, Checkbox, IconButton, Typography } from "@mui/material"
+import { CardContent, Checkbox, IconButton, Modal, Typography } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TaskForm from "./TaskForm";
+import { useState } from "react";
+import { Task } from "../pages";
 
 type TaskCardProps = {
-    id: number,
-    name: string,
-    description: string,
-    deadline?: Date,
-    done: boolean,
+    task: Task
     getTasks: () => void,
 }
 
-const TaskCard = ({id, name, description, deadline, done, getTasks}: TaskCardProps) => {    
+const TaskCard = ({task, getTasks}: TaskCardProps) => {    
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
+
+    const handleOpenModal = () => setModalOpen(true)
+    const handleCloseModal = () => setModalOpen(false)
+    
     const updateTaskDone = async() => {
         const data = JSON.stringify({
-            name: name,
-            description: description,
-            deadline: deadline,
-            done: !done,
+            name: task.name,
+            description: task.description,
+            deadline: task.deadline,
+            done: !task.done,
         })
         const options = {
             method: "PATCH",
@@ -26,7 +31,7 @@ const TaskCard = ({id, name, description, deadline, done, getTasks}: TaskCardPro
                 "Content-Type": "application/merge-patch+json"
             }
         }
-        await fetch(`/tasks/${id}`, options)
+        await fetch(`/tasks/${task.id}`, options)
         await getTasks()
     }
 
@@ -34,26 +39,34 @@ const TaskCard = ({id, name, description, deadline, done, getTasks}: TaskCardPro
         const options = {
             method: "DELETE"
         }
-        await fetch(`/tasks/${id}`, options)
+        await fetch(`/tasks/${task.id}`, options)
         await getTasks()
     }
 
     return (
-        <CardContent>
-            <Typography sx={{color: "text.secondary", fontSize: 14}}>
-                {deadline?.toLocaleString()}
-            </Typography>
-            <Typography variant="h5">
-                {name}
-            </Typography>
-            <Typography variant="body2">
-                {description}
-            </Typography>
-            <Checkbox checked={done} onClick={updateTaskDone} />
-            <IconButton onClick={deleteTask}>
-                <DeleteIcon />
-            </IconButton>
-        </CardContent>
+        <>
+            <CardContent>
+                <Typography sx={{color: "text.secondary", fontSize: 14}}>
+                    {task.deadline?.toLocaleString()}
+                </Typography>
+                <Typography variant="h5">
+                    {task.name}
+                </Typography>
+                <Typography variant="body2">
+                    {task.description}
+                </Typography>
+                <Checkbox checked={task.done} onClick={updateTaskDone} />
+                <IconButton onClick={handleOpenModal}>
+                    <EditIcon />
+                </IconButton>
+                <IconButton onClick={deleteTask}>
+                    <DeleteIcon />
+                </IconButton>
+            </CardContent>
+            <Modal open={modalOpen} onClose={handleCloseModal}>
+                <TaskForm getTasks={getTasks} handleCloseModal={handleCloseModal} task={task} />
+            </Modal>
+        </>
     )
 }
 
