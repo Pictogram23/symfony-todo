@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import TaskCard from "../components/TaskCard"
-import { Card } from "@mui/material"
+import { Box, Card, IconButton, Modal } from "@mui/material"
 import TaskForm from "../components/TaskForm"
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 type Task = {
   id: number,
@@ -13,6 +14,10 @@ type Task = {
 
 const Home = () => {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+
+  const handleOpenModal = () => setModalOpen(true)
+  const handleCloseModal = () => setModalOpen(false)
 
   const getTasks = async() => {
     const res = await fetch("/tasks")
@@ -44,9 +49,16 @@ const Home = () => {
         )
       })}
     </div>
-    <div style={{paddingTop: 10}}>
-      <TaskForm getTasks={getTasks} />
-    </div>
+    <IconButton onClick={handleOpenModal}>
+      <AddCircleIcon />
+    </IconButton>
+    <Modal open={modalOpen} onClose={handleCloseModal}>
+      <Box position='absolute' top='50%' left='50%'
+        width={400} height={300} bgcolor='background.paper'
+        sx={{transform: 'translate(-50%, -50%)'}}>
+        <TaskForm getTasks={getTasks} handleCloseModal={handleCloseModal} />
+      </Box>
+    </Modal>
   </>)
 }
 
